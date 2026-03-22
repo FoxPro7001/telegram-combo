@@ -687,6 +687,11 @@ function AccountDialog({
   const [proxyPort, setProxyPort] = React.useState('')
   const [proxyType, setProxyType] = React.useState('socks5')
   const [loading, setLoading] = React.useState(false)
+  const [activeTab, setActiveTab] = React.useState('manual')
+  const [tdataFiles, setTdataFiles] = React.useState<FileList | null>(null)
+  const [tdataName, setTdataName] = React.useState('')
+  const [isDragging, setIsDragging] = React.useState(false)
+  const fileInputRef = React.useRef<HTMLInputElement>(null)
 
   React.useEffect(() => {
     if (account) {
@@ -703,11 +708,47 @@ function AccountDialog({
       setProxyHost('')
       setProxyPort('')
       setProxyType('socks5')
+      setTdataFiles(null)
+      setTdataName('')
     }
   }, [account, open])
 
+  const handleTdataDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragging(false)
+    const files = e.dataTransfer.files
+    if (files.length > 0) {
+      setTdataFiles(files)
+      // Auto-detect name from folder
+      const firstFile = files[0]
+      if (firstFile) {
+        const pathParts = firstFile.webkitRelativePath?.split('/') || []
+        if (pathParts.length > 0) {
+          setTdataName(pathParts[0])
+          setName(prev => prev || pathParts[0])
+        }
+      }
+    }
+  }
+
+  const handleTdataSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files
+    if (files && files.length > 0) {
+      setTdataFiles(files)
+      // Auto-detect name from folder
+      const firstFile = files[0]
+      if (firstFile) {
+        const pathParts = firstFile.webkitRelativePath?.split('/') || []
+        if (pathParts.length > 0) {
+          setTdataName(pathParts[0])
+          setName(prev => prev || pathParts[0])
+        }
+      }
+    }
+  }
+
   const handleSubmit = async () => {
-    if (!phone.trim() || !name.trim() || !projectId) return
+    if ((!phone.trim() && !tdataFiles) || !name.trim() || !projectId) return
     
     setLoading(true)
     try {
@@ -718,13 +759,25 @@ function AccountDialog({
           body: JSON.stringify({ name, folder, proxyHost, proxyPort, proxyType })
         })
       } else {
+        // In real app, would upload tdata files here
         await fetch('/api/accounts', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ phone, name, folder, projectId, proxyHost, proxyPort, proxyType })
+          body: JSON.stringify({ 
+            phone: phone || `tdata_${Date.now()}`, 
+            name, 
+            folder, 
+            projectId, 
+            proxyHost, 
+            proxyPort, 
+            proxyType,
+            tdataPath: tdataFiles ? tdataName : null
+          })
         })
       }
       onSuccess()
+      setTdataFiles(null)
+      setTdataName('')
     } catch (e) {
       console.error(e)
     } finally {
@@ -745,35 +798,97 @@ function AccountDialog({
     }
   }
 
+  const canSubmit = name.trim() && (activeTab === 'tdata' ? tdataFiles : phone.trim())
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{account ? 'Редактировать аккаунт' : 'Добавить аккаунт'}</DialogTitle>
           <DialogDescription>
-            {account ? `${account.name} • ${account.phone}` : 'Загрузите tdata или введите данные'}
+            {account ? `${account.name} • ${account.phone}` : 'Загрузите tdata или введите данные вручную'}
           </DialogDescription>
         </DialogHeader>
 
-        <Tabs defaultValue="manual" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="tdata">TData</TabsTrigger>
-            <TabsTrigger value="manual">Вручную</TabsTrigger>
-          </TabsList>
-          <TabsContent value="tdata" className="space-y-4 mt-4">
-            <div className="border-2 border-dashed border-border rounded-lg p-8 text-center hover:border-primary/50 transition-colors cursor-pointer">
-              <Upload className="h-10 w-10 mx-auto text-muted-foreground mb-3" />
-              <p className="text-sm font-medium mb-1">Перетащите tdata папку</p>
-              <p className="text-xs text-muted-foreground">или нажмите для выбора</p>
-            </div>
-          </TabsContent>
-          <TabsContent value="manual" className="space-y-4 mt-4">
-            <div className="grid gap-2">
-              <Label>Номер телефона</Label>
-              <Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+7 999 123 4567" />
-            </div>
-          </TabsContent>
-        </Tabs>
+        {!account && (
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="tdata" className="gap-2">
+                <Upload className="h-4 w-4" />
+                TData
+              </TabsTrigger>
+              <TabsTrigger value="manual" className="gap-2">
+                <Edit className="h-4 w-4" />
+                Вручную
+              </TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="tdata" className="space-y-4 mt-4">
+              <input
+                ref={fileInputRef}
+                type="file"
+                webkitdirectory=""
+                directory=""
+                multiple
+                onChange={handleTdataSelect}
+                className="hidden"
+              />
+              
+              <div
+                onClick={() => fileInputRef.current?.click()}
+                onDragOver={(e) => { e.preventDefault(); setIsDragging(true) }}
+                onDragLeave={() => setIsDragging(false)}
+                onDrop={handleTdataDrop}
+                className={cn(
+                  'border-2 border-dashed rounded-lg p-8 text-center transition-all cursor-pointer',
+                  isDragging 
+                    ? 'border-primary bg-primary/10' 
+                    : tdataFiles 
+                      ? 'border-green-500 bg-green-500/10'
+                      : 'border-border hover:border-primary/50'
+                )}
+              >
+                {tdataFiles ? (
+                  <>
+                    <CheckCircle className="h-10 w-10 mx-auto text-green-500 mb-3" />
+                    <p className="text-sm font-medium mb-1 text-green-400">TData загружен!</p>
+                    <p className="text-xs text-muted-foreground">
+                      {tdataFiles.length} файлов • {tdataName}
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <Upload className="h-10 w-10 mx-auto text-muted-foreground mb-3" />
+                    <p className="text-sm font-medium mb-1">Перетащите tdata папку</p>
+                    <p className="text-xs text-muted-foreground">или нажмите для выбора</p>
+                  </>
+                )}
+              </div>
+              
+              {tdataFiles && (
+                <div className="flex items-center gap-2 p-2 rounded bg-muted/50 text-sm">
+                  <span className="text-muted-foreground">Найдено:</span>
+                  <span className="font-medium">{tdataName}</span>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="ml-auto h-6 px-2"
+                    onClick={() => { setTdataFiles(null); setTdataName('') }}
+                  >
+                    <Trash2 className="h-3 w-3" />
+                  </Button>
+                </div>
+              )}
+            </TabsContent>
+            
+            <TabsContent value="manual" className="space-y-4 mt-4">
+              <div className="grid gap-2">
+                <Label>Номер телефона</Label>
+                <Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+7 999 123 4567" />
+              </div>
+            </TabsContent>
+          </Tabs>
+        )}
 
         <div className="grid gap-4">
           <div className="grid gap-2">
@@ -829,8 +944,17 @@ function AccountDialog({
           )}
           <div className="flex gap-2 ml-auto">
             <Button variant="outline" onClick={() => onOpenChange(false)}>Отмена</Button>
-            <Button onClick={handleSubmit} disabled={loading || !name.trim() || !phone.trim()} className="bg-gradient-to-r from-blue-500 to-purple-600 text-white">
-              {account ? 'Сохранить' : 'Добавить'}
+            <Button 
+              onClick={handleSubmit} 
+              disabled={loading || !canSubmit} 
+              className="bg-gradient-to-r from-blue-500 to-purple-600 text-white"
+            >
+              {loading ? (
+                <>
+                  <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                  Загрузка...
+                </>
+              ) : account ? 'Сохранить' : 'Добавить'}
             </Button>
           </div>
         </DialogFooter>
