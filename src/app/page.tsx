@@ -3428,29 +3428,195 @@ function AnalyticsPage({ project }: { project?: Project }) {
 }
 
 function SettingsPage() {
+  const handleDownloadRoadmap = () => {
+    const link = document.createElement('a')
+    link.href = '/TELEGRAM-COMBO-ROADMAP.md'
+    link.download = 'TELEGRAM-COMBO-ROADMAP.md'
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
+
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Настройки</h1>
+      <div className="flex items-center gap-2">
+        <Settings className="h-6 w-6" />
+        <h1 className="text-2xl font-bold">Настройки</h1>
+      </div>
+
+      {/* Download Roadmap */}
+      <Card className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border-blue-500/20">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Database className="h-5 w-5" />
+            Документация проекта
+          </CardTitle>
+          <CardDescription>
+            Полный roadmap разработки Telegram Комбайна
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center justify-between">
+            <div className="text-sm text-muted-foreground">
+              <p>Содержит:</p>
+              <ul className="list-disc list-inside mt-1">
+                <li>Архитектуру проекта</li>
+                <li>Модели данных (Prisma Schema)</li>
+                <li>API Endpoints</li>
+                <li>План разработки (30 дней)</li>
+                <li>Инструкции по деплою</li>
+              </ul>
+            </div>
+            <Button 
+              onClick={handleDownloadRoadmap}
+              className="bg-gradient-to-r from-blue-500 to-purple-600 text-white"
+            >
+              <Upload className="h-4 w-4 mr-2" />
+              Скачать Roadmap
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Card>
-          <CardHeader><CardTitle>Telegram API</CardTitle></CardHeader>
+          <CardHeader>
+            <CardTitle>Лимиты по умолчанию</CardTitle>
+            <CardDescription>Глобальные ограничения для всех задач</CardDescription>
+          </CardHeader>
           <CardContent className="space-y-4">
-            <div className="grid gap-2"><Label>API ID</Label><Input placeholder="12345678" /></div>
-            <div className="grid gap-2"><Label>API Hash</Label><Input type="password" placeholder="••••••••" /></div>
-            <Button variant="outline" className="w-full">Проверить подключение</Button>
+            <div className="grid gap-2">
+              <Label>Макс. сообщений в день</Label>
+              <Input type="number" defaultValue="500" />
+            </div>
+            <div className="grid gap-2">
+              <Label>Макс. инвайтов в день</Label>
+              <Input type="number" defaultValue="50" />
+            </div>
+            <div className="grid gap-2">
+              <Label>Макс. комментариев в день</Label>
+              <Input type="number" defaultValue="30" />
+            </div>
+            <div className="grid gap-2">
+              <Label>Базовая задержка (сек)</Label>
+              <Input type="number" defaultValue="30" />
+            </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader><CardTitle>Лимиты</CardTitle></CardHeader>
+          <CardHeader>
+            <CardTitle>Прокси по умолчанию</CardTitle>
+            <CardDescription>Применяется к новым аккаунтам</CardDescription>
+          </CardHeader>
           <CardContent className="space-y-4">
-            <div className="grid gap-2"><Label>Макс. сообщений в день</Label><Input type="number" defaultValue="500" /></div>
-            <div className="grid gap-2"><Label>Макс. инвайтов в день</Label><Input type="number" defaultValue="50" /></div>
-            <div className="grid gap-2"><Label>Задержка (сек)</Label><Input type="number" defaultValue="30" /></div>
+            <div className="grid grid-cols-3 gap-4">
+              <div className="grid gap-2">
+                <Label>Тип</Label>
+                <Select defaultValue="socks5">
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="socks5">SOCKS5</SelectItem>
+                    <SelectItem value="socks4">SOCKS4</SelectItem>
+                    <SelectItem value="http">HTTP</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="grid gap-2">
+                <Label>Хост</Label>
+                <Input placeholder="proxy.com" />
+              </div>
+              <div className="grid gap-2">
+                <Label>Порт</Label>
+                <Input placeholder="1080" />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="grid gap-2">
+                <Label>Логин</Label>
+                <Input placeholder="user" />
+              </div>
+              <div className="grid gap-2">
+                <Label>Пароль</Label>
+                <Input type="password" placeholder="••••" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Уведомления</CardTitle>
+            <CardDescription>Настройка оповещений системы</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="font-medium">Ошибки задач</div>
+                <div className="text-sm text-muted-foreground">Уведомлять при ошибках</div>
+              </div>
+              <Switch defaultChecked />
+            </div>
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="font-medium">Завершение задач</div>
+                <div className="text-sm text-muted-foreground">Уведомлять при завершении</div>
+              </div>
+              <Switch defaultChecked />
+            </div>
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="font-medium">Ограничения аккаунтов</div>
+                <div className="text-sm text-muted-foreground">Flood Wait, лимиты</div>
+              </div>
+              <Switch defaultChecked />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Данные</CardTitle>
+            <CardDescription>Управление данными приложения</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Button variant="outline" className="w-full justify-start">
+              <Database className="h-4 w-4 mr-2" />
+              Экспорт базы данных
+            </Button>
+            <Button variant="outline" className="w-full justify-start">
+              <Upload className="h-4 w-4 mr-2" />
+              Импорт базы данных
+            </Button>
+            <Button variant="outline" className="w-full justify-start text-destructive hover:text-destructive">
+              <Trash2 className="h-4 w-4 mr-2" />
+              Очистить все данные
+            </Button>
           </CardContent>
         </Card>
       </div>
+
+      {/* About */}
+      <Card>
+        <CardHeader>
+          <CardTitle>О приложении</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-lg font-semibold">Telegram Комбайн</div>
+              <div className="text-sm text-muted-foreground">Версия 2.4.0</div>
+              <div className="text-xs text-muted-foreground mt-1">
+                Мульти-функциональный инструмент для автоматизации Telegram
+              </div>
+            </div>
+            <div className="text-right text-xs text-muted-foreground">
+              <div>© 2024</div>
+              <div>GitHub: FoxPro7001/telegram-combo</div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }
