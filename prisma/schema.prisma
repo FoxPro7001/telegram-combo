@@ -1,9 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,20 +10,135 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+// ==================== PROJECTS ====================
+
+model Project {
+  id          String     @id @default(cuid())
+  name        String
+  description String?
+  color       String     @default("#8B5CF6")
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  
+  accounts    Account[]
+  databases   Database[]
+  tasks       Task[]
 }
 
-model Post {
-  id        String   @id @default(cuid())
-  title     String
-  content   String?
-  published Boolean  @default(false)
-  authorId  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+// ==================== ACCOUNTS ====================
+
+model Account {
+  id             String   @id @default(cuid())
+  phone          String
+  name           String
+  status         String   @default("OFFLINE") // ONLINE, OFFLINE, LIMITED, WARMING
+  folder         String   @default("WORK")    // WORK, ADMINS, PERSONAL
+  
+  // TData
+  tdataPath      String?
+  
+  // Proxy
+  proxyType      String?  // socks5, socks4, http, https
+  proxyHost      String?
+  proxyPort      String?
+  proxyUser      String?
+  proxyPassword  String?
+  
+  // Stats
+  messagesSent   Int      @default(0)
+  invitesSent    Int      @default(0)
+  lastActiveAt   DateTime?
+  
+  // Warmup
+  warmupProgress Int?
+  warmupDays     Int?
+  
+  // Relations
+  projectId      String
+  project        Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  
+  @@unique([projectId, phone])
+}
+
+// ==================== DATABASES (Parsed Data) ====================
+
+model Database {
+  id          String   @id @default(cuid())
+  name        String
+  source      String   // @channel_name or link
+  count       Int      @default(0)
+  data        String?  // JSON array of parsed users
+  
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// ==================== TASKS ====================
+
+model Task {
+  id          String   @id @default(cuid())
+  name        String
+  type        String   // PARSING, INVITING, MESSAGING, WARMUP, COMMENTING
+  status      String   @default("PAUSED") // RUNNING, PAUSED, COMPLETED, ERROR
+  
+  // Progress
+  progress    Int      @default(0)
+  target      Int      @default(0)
+  completed   Int      @default(0)
+  speed       String?
+  eta         String?
+  
+  // Config (JSON)
+  config      String?  // Task-specific configuration
+  
+  // Error
+  error       String?
+  
+  // Relations
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+  // Account assigned to task
+  accountId   String?
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// ==================== SETTINGS ====================
+
+model Settings {
+  id                  String   @id @default(cuid())
+  
+  // Telegram API
+  telegramApiId       String?
+  telegramApiHash     String?
+  
+  // Limits
+  maxMessagesPerDay   Int      @default(500)
+  maxInvitesPerDay    Int      @default(50)
+  actionDelay         Int      @default(30)  // seconds
+  
+  // Auto-start
+  autoStartTasks      Boolean  @default(true)
+  notifications       Boolean  @default(true)
+  
+  updatedAt           DateTime @updatedAt
+}
+
+// ==================== ACTIVITY LOG ====================
+
+model ActivityLog {
+  id          String   @id @default(cuid())
+  type        String   // success, info, warning, error
+  message     String
+  projectId   String?
+  
+  createdAt   DateTime @default(now())
 }
