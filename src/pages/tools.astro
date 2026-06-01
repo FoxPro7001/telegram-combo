@@ -1,0 +1,143 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<BaseLayout title="Материалы">
+  <Header />
+  
+  <main>
+    <section class="section bg-bg">
+      <div class="container-narrow">
+        <h1>Бесплатные материалы</h1>
+        <p class="text-light" style="font-size: var(--text-xl); margin-bottom: var(--space-8);">
+          Готовые промпты и шаблоны для разных задач. Копируй и используй в своих проектах.
+        </p>
+        
+        <!-- Loading state placeholder -->
+        <div id="tools-loading" style="text-align: center; padding: var(--space-12);">
+          <p class="text-muted">Загрузка материалов...</p>
+        </div>
+        
+        <!-- Empty state (hidden by default) -->
+        <div id="tools-empty" style="display: none; text-align: center; padding: var(--space-12);" class="card">
+          <h3>Скоро наполнится</h3>
+          <p class="text-light">Мы готовим новые материалы. Загляни позже!</p>
+        </div>
+        
+        <!-- Error state (hidden by default) -->
+        <div id="tools-error" style="display: none; text-align: center; padding: var(--space-12);" class="card">
+          <h3 style="color: var(--error);">Ошибка загрузки</h3>
+          <p class="text-light">Попробуй обновить страницу.</p>
+        </div>
+        
+        <!-- Materials grid (populated by JS) -->
+        <div id="tools-grid" class="grid grid--cards" style="display: none;"></div>
+      </div>
+    </section>
+  </main>
+  
+  <Footer />
+</BaseLayout>
+
+<script>
+  // Sample materials data (replace with real data source)
+  const materials = [
+    {
+      id: 1,
+      category: 'texts',
+      badge: 'Тексты',
+      badgeClass: 'badge-blue',
+      title: 'Статья для блога',
+      description: 'Шаблон для написания SEO-статей с структурой и ключевыми словами.',
+      prompt: 'Напиши статью на тему "[ТЕМА]" для блога о нейросетях. Структура: введение (почему это важно), основная часть (3-5 пунктов с примерами), заключение (что делать дальше). Тон: дружелюбный, без жаргона. Объем: 1500-2000 слов.'
+    },
+    {
+      id: 2,
+      category: 'texts',
+      badge: 'Тексты',
+      badgeClass: 'badge-blue',
+      title: 'Письмо клиенту',
+      description: 'Вежливый шаблон для деловой переписки.',
+      prompt: 'Напиши письмо клиенту по поводу [СИТУАЦИЯ]. Тон: профессиональный, но тёплый. Включи: приветствие, суть вопроса, предложение решения, призыв к действию, подпись.'
+    },
+    {
+      id: 3,
+      category: 'images',
+      badge: 'Картинки',
+      badgeClass: 'badge-purple',
+      title: 'Иллюстрация для поста',
+      description: 'Промпт для генерации изображений в Midjourney/DALL-E.',
+      prompt: 'Minimalist flat illustration, tech theme, indigo and green color scheme, clean lines, no gradients, white background --style raw --v 6'
+    },
+    {
+      id: 4,
+      category: 'productivity',
+      badge: 'Экономия',
+      badgeClass: 'badge-green',
+      title: 'Саммари документа',
+      description: 'Как быстро получить краткое содержание длинного текста.',
+      prompt: 'Сделай саммари этого текста. Выдели: 1) главную мысль (1 предложение), 2) ключевые тезисы (3-5 пунктов), 3) выводы/рекомендации. Текст: [ВСТАВИТЬ ТЕКСТ]'
+    },
+    {
+      id: 5,
+      category: 'texts',
+      badge: 'Тексты',
+      badgeClass: 'badge-blue',
+      title: 'Пост для соцсетей',
+      description: 'Шаблон для создания вовлекающих постов.',
+      prompt: 'Напиши пост для Telegram на тему "[ТЕМА]". Структура: цепляющий заголовок (вопрос или утверждение), основная часть (2-3 абзаца с эмодзи), призыв к действию (вопрос аудитории). Тон: живой, разговорный.'
+    }
+  ];
+  
+  function copyToClipboard(text: string, button: HTMLButtonElement) {
+    navigator.clipboard.writeText(text).then(() => {
+      const originalText = button.textContent;
+      button.textContent = 'Скопировано!';
+      button.disabled = true;
+      
+      setTimeout(() => {
+        button.textContent = originalText;
+        button.disabled = false;
+      }, 2000);
+    }).catch(() => {
+      alert('Не удалось скопировать. Попробуй вручную.');
+    });
+  }
+  
+  function renderMaterials() {
+    const loadingEl = document.getElementById('tools-loading');
+    const emptyEl = document.getElementById('tools-empty');
+    const errorEl = document.getElementById('tools-error');
+    const gridEl = document.getElementById('tools-grid');
+    
+    if (!gridEl || !loadingEl) return;
+    
+    // Simulate loading delay
+    setTimeout(() => {
+      loadingEl.style.display = 'none';
+      
+      if (materials.length === 0) {
+        emptyEl.style.display = 'block';
+        return;
+      }
+      
+      gridEl.style.display = 'grid';
+      gridEl.innerHTML = materials.map(material => `
+        <article class="card">
+          <span class="badge ${material.badgeClass}">${material.badge}</span>
+          <h3 style="margin-top: var(--space-3); margin-bottom: var(--space-2);">${material.title}</h3>
+          <p class="text-light" style="margin-bottom: var(--space-4);">${material.description}</p>
+          <div class="prompt-block">
+            <code>${material.prompt}</code>
+          </div>
+          <button class="btn btn-secondary prompt-block__copy-btn" onclick="copyToClipboard('${material.prompt.replace(/'/g, "\\'")}', this)">Копировать</button>
+        </article>
+      `).join('');
+    }, 500);
+  }
+  
+  // Initialize on load
+  document.addEventListener('DOMContentLoaded', renderMaterials);
+</script>

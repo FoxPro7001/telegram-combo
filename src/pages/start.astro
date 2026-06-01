@@ -1,0 +1,56 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<BaseLayout title="С чего начать">
+  <Header />
+  
+  <main>
+    <section class="section bg-bg">
+      <div class="container-narrow">
+        <h1 style="text-align: center; margin-bottom: var(--space-2);">С чего начать</h1>
+        <p class="text-light text-center" style="font-size: var(--text-xl); margin-bottom: var(--space-12);">
+          Три простых шага для старта с нейросетями
+        </p>
+        
+        <div class="grid" style="gap: var(--space-6);">
+          <article class="card">
+            <span class="badge badge-blue">Шаг 1</span>
+            <h2 style="margin-top: var(--space-3); margin-bottom: var(--space-2);">Открой каталог материалов</h2>
+            <p class="text-light">
+              Перейди в раздел «Материалы» и выбери задачу, которая тебе интересна: тексты, картинки или экономия времени. Каждый шаблон готов к использованию — просто скопируй промпт.
+            </p>
+            <a href="/tools/" class="btn" style="margin-top: var(--space-4);">Перейти к материалам</a>
+          </article>
+          
+          <article class="card">
+            <span class="badge badge-green">Шаг 2</span>
+            <h2 style="margin-top: var(--space-3); margin-bottom: var(--space-2);">Вставь в нейросеть</h2>
+            <p class="text-light">
+              Открой ChatGPT, Claude или другую нейросеть. Вставь скопированный промпт, замени квадратные скобки [НА ЭТО] на свои данные и отправь запрос. Получишь готовый результат.
+            </p>
+            <a href="https://chat.openai.com" class="btn" target="_blank" rel="noopener" style="margin-top: var(--space-4);">Открыть ChatGPT</a>
+          </article>
+          
+          <article class="card">
+            <span class="badge badge-purple">Шаг 3</span>
+            <h2 style="margin-top: var(--space-3); margin-bottom: var(--space-2);">Подпишись на каналы</h2>
+            <p class="text-light">
+              В Telegram-каналах CodClub мы публикуем новые шаблоны, разбираем ошибки и показываем неочевидные способы применения ИИ. Выбирай любой или все три.
+            </p>
+            <a href="https://t.me/codclub_shtab" class="btn" target="_blank" rel="noopener" style="margin-top: var(--space-4);">Открыть Telegram</a>
+          </article>
+        </div>
+        
+        <div class="text-center" style="margin-top: var(--space-12);">
+          <p class="text-light" style="margin-bottom: var(--space-4);">Готов попробовать?</p>
+          <a href="/tools/" class="btn btn-large">Начать сейчас</a>
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <Footer />
+</BaseLayout>

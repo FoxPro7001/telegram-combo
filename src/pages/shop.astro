@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<BaseLayout title="Магазин">
+  <Header />
+  
+  <main>
+    <section class="hero section bg-bg">
+      <div class="container-narrow">
+        <h1>Магазин</h1>
+        <p class="hero__subtitle" style="margin-top: var(--space-4);">
+          Магазин скоро откроется
+        </p>
+        <div class="hero__actions">
+          <p class="text-light" style="font-size: var(--text-lg);">
+            Мы готовим платные продукты, но все базовые материалы останутся бесплатными.
+          </p>
+          <a href="/tools/" class="btn">Пока смотри бесплатные материалы</a>
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <Footer />
+</BaseLayout>

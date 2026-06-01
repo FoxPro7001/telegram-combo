@@ -1,0 +1,120 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<BaseLayout title="Личный кабинет">
+  <Header />
+  
+  <main>
+    <section class="section bg-bg">
+      <div class="container-narrow">
+        <h1 style="text-align: center; margin-bottom: var(--space-8);">Личный кабинет</h1>
+        
+        <!-- Login form (shown when not logged in) -->
+        <div id="login-form" class="card" style="max-width: 400px; margin: 0 auto;">
+          <h2 style="margin-bottom: var(--space-2);">Вход по email</h2>
+          <p class="text-light" style="margin-bottom: var(--space-6);">
+            Отправим ссылку для входа без пароля
+          </p>
+          
+          <form id="email-login-form">
+            <label for="login-email" class="sr-only">Email</label>
+            <input 
+              type="email" 
+              id="login-email" 
+              name="email" 
+              class="input" 
+              placeholder="tvoy@email.ru" 
+              required
+              style="margin-bottom: var(--space-4);"
+            />
+            
+            <button type="submit" class="btn" style="width: 100%;">Отправить ссылку</button>
+            
+            <div id="login-message" class="form-message" style="display: none;"></div>
+          </form>
+        </div>
+        
+        <!-- Logged in state (hidden by default) -->
+        <div id="logged-in" style="display: none;" class="card" style="max-width: 500px; margin: 0 auto;">
+          <h2 style="margin-bottom: var(--space-4);">Привет!</h2>
+          <p class="text-light" style="margin-bottom: var(--space-6);">
+            Ты вошёл как <span id="user-email" style="color: var(--text);"></span>
+          </p>
+          
+          <h3 style="margin-bottom: var(--space-3);">Покупки</h3>
+          <div class="card" style="background-color: var(--bg); box-shadow: none;">
+            <p class="text-light">У тебя пока нет покупок.</p>
+            <p class="text-light" style="font-size: var(--text-sm);">
+              Когда появятся платные продукты, они отобразятся здесь.
+            </p>
+          </div>
+          
+          <button id="logout-btn" class="btn btn-secondary" style="margin-top: var(--space-6);">Выйти</button>
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <Footer />
+</BaseLayout>
+
+<script>
+  const loginForm = document.getElementById('email-login-form');
+  const loginMessage = document.getElementById('login-message');
+  const loginCard = document.getElementById('login-form');
+  const loggedInCard = document.getElementById('logged-in');
+  const userEmailSpan = document.getElementById('user-email');
+  const logoutBtn = document.getElementById('logout-btn');
+  
+  // Check if user is already logged in (from localStorage or URL param)
+  const urlParams = new URLSearchParams(window.location.search);
+  const token = urlParams.get('token') || localStorage.getItem('codclub_token');
+  const email = localStorage.getItem('codclub_email');
+  
+  if (token && email) {
+    showLoggedIn(email);
+  }
+  
+  function showLoggedIn(userEmail: string) {
+    loginCard.style.display = 'none';
+    loggedInCard.style.display = 'block';
+    userEmailSpan.textContent = userEmail;
+  }
+  
+  function showLogin() {
+    loginCard.style.display = 'block';
+    loggedInCard.style.display = 'none';
+  }
+  
+  if (loginForm) {
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const emailInput = (loginForm.querySelector('#login-email') as HTMLInputElement).value;
+      
+      // Placeholder: In real implementation, send email to backend
+      loginMessage.textContent = 'Ссылка отправлена на почту! Проверь inbox.';
+      loginMessage.className = 'form-message form-message--success';
+      loginMessage.style.display = 'block';
+      
+      // Simulate login for demo
+      localStorage.setItem('codclub_email', emailInput);
+      localStorage.setItem('codclub_token', 'demo-token-' + Date.now());
+      
+      setTimeout(() => {
+        showLoggedIn(emailInput);
+      }, 1500);
+    });
+  }
+  
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', () => {
+      localStorage.removeItem('codclub_email');
+      localStorage.removeItem('codclub_token');
+      showLogin();
+    });
+  }
+</script>

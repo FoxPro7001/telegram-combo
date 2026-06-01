@@ -1,0 +1,65 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+---
+
+<BaseLayout title="Политика конфиденциальности">
+  <Header />
+  
+  <main>
+    <section class="section bg-bg">
+      <div class="container-narrow">
+        <h1>Политика конфиденциальности</h1>
+        <p class="text-light" style="margin-bottom: var(--space-8);">
+          Последнее обновление: январь 2026
+        </p>
+        
+        <article style="prose; max-width: 720px;">
+          <h2>1. Общие положения</h2>
+          <p class="text-light">
+            Мы уважаем твою приватность и стараемся собирать минимум данных. Эта политика объясняет, что мы собираем, зачем и как защищаем.
+          </p>
+          
+          <h2>2. Какие данные мы собираем</h2>
+          <p class="text-light">
+            Только email-адрес, если ты сам оставляешь его в форме подписки или входа. Никаких телефонов, паспортных данных или информации о платежах (пока их нет).
+          </p>
+          
+          <h2>3. Зачем мы это собираем</h2>
+          <p class="text-light">
+            Чтобы отправить тебе ссылку для входа без пароля и рассылку с новыми материалами. Ты можешь отписаться в любой момент.
+          </p>
+          
+          <h2>4. Как мы храним данные</h2>
+          <p class="text-light">
+            Email хранится в зашифрованном виде на сервере. Доступ есть только у технической команды для отправки писем.
+          </p>
+          
+          <h2>5. Твои права</h2>
+          <p class="text-light">
+            Ты можешь запросить удаление своего email в любой момент — напиши на email@codclub.ru.
+          </p>
+          
+          <h2>6. Контакты</h2>
+          <p class="text-light">
+            Вопросы по конфиденциальности: email@codclub.ru
+          </p>
+        </article>
+      </div>
+    </section>
+  </main>
+  
+  <Footer />
+</BaseLayout>
+
+<style>
+  article h2 {
+    margin-top: var(--space-8);
+    margin-bottom: var(--space-4);
+  }
+  
+  article p {
+    margin-bottom: var(--space-4);
+  }
+</style>
