@@ -1,0 +1,228 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<BaseLayout title="Главная">
+  <Header />
+  
+  <main>
+    <!-- Hero Section -->
+    <section class="hero section bg-bg">
+      <div class="container-narrow">
+        <h1 class="hero__title">Нейросети простыми словами</h1>
+        <p class="hero__subtitle">
+          Объясняем, что нового в ИИ и как применять его в обычных делах: тексты, поиск, картинки, экономия времени.
+        </p>
+        <div class="hero__actions">
+          <a href="/tools/" class="btn btn-large">Открыть бесплатные материалы</a>
+          <p class="hero__note">Бесплатно и без регистрации</p>
+        </div>
+      </div>
+    </section>
+    
+    <!-- What You Can Do Section -->
+    <section class="section bg-surface">
+      <div class="container">
+        <h2 style="text-align: center; margin-bottom: var(--space-8);">Что ты можешь сделать</h2>
+        <div class="grid grid--cards">
+          <article class="card">
+            <span class="badge badge-blue">Тексты</span>
+            <h3 style="margin-top: var(--space-3); margin-bottom: var(--space-2);">Писать тексты</h3>
+            <p class="text-light">
+              Создавай статьи, посты, письма и документы с помощью ИИ. Экономь время на рутине.
+            </p>
+            <a href="/tools/?category=texts" class="btn" style="margin-top: var(--space-4);">Смотреть шаблоны</a>
+          </article>
+          
+          <article class="card">
+            <span class="badge badge-purple">Картинки</span>
+            <h3 style="margin-top: var(--space-3); margin-bottom: var(--space-2);">Делать картинки</h3>
+            <p class="text-light">
+              Генерируй изображения для презентаций, соцсетей и проектов без дизайнера.
+            </p>
+            <a href="/tools/?category=images" class="btn" style="margin-top: var(--space-4);">Смотреть шаблоны</a>
+          </article>
+          
+          <article class="card">
+            <span class="badge badge-green">Экономия</span>
+            <h3 style="margin-top: var(--space-3); margin-bottom: var(--space-2);">Экономить время</h3>
+            <p class="text-light">
+              Автоматизируй рутинные задачи: поиск, анализ, summaries документов.
+            </p>
+            <a href="/tools/?category=productivity" class="btn" style="margin-top: var(--space-4);">Смотреть шаблоны</a>
+          </article>
+          
+          <article class="card">
+            <span class="badge badge-orange">С нуля</span>
+            <h3 style="margin-top: var(--space-3); margin-bottom: var(--space-2);">Разобраться с нуля</h3>
+            <p class="text-light">
+              Никогда не работал с нейросетями? Начни здесь — объясним пошагово.
+            </p>
+            <a href="/start/" class="btn" style="margin-top: var(--space-4);">Начать обучение</a>
+          </article>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Free Materials Section -->
+    <section class="section bg-bg">
+      <div class="container-narrow text-center">
+        <h2>Бесплатные материалы</h2>
+        <p class="text-light" style="font-size: var(--text-xl); margin-bottom: var(--space-6);">
+          Готовые промпты и шаблоны для разных задач. Копируй и используй.
+        </p>
+        <a href="/tools/" class="btn">Смотреть материалы</a>
+      </div>
+    </section>
+    
+    <!-- Telegram Channels Section -->
+    <section class="section bg-surface">
+      <div class="container">
+        <h2 style="text-align: center; margin-bottom: var(--space-8);">Наши каналы</h2>
+        <div class="grid grid--cards">
+          <article class="card">
+            <span class="badge badge-blue">Штаб</span>
+            <h3 style="margin-top: var(--space-3); margin-bottom: var(--space-2);">CodClub Штаб</h3>
+            <p class="text-light">
+              Главные новости ИИ, обновления и анонсы. Только важное, без шума.
+            </p>
+            <a href="https://t.me/codclub_shtab" class="btn" target="_blank" rel="noopener">Открыть в Telegram</a>
+          </article>
+          
+          <article class="card">
+            <span class="badge badge-green">АнтиХаос</span>
+            <h3 style="margin-top: var(--space-3); margin-bottom: var(--space-2);">АнтиХаос</h3>
+            <p class="text-light">
+              Практические советы по применению ИИ в повседневных задачах.
+            </p>
+            <a href="https://t.me/codclub_antichaos" class="btn" target="_blank" rel="noopener">Открыть в Telegram</a>
+          </article>
+          
+          <article class="card">
+            <span class="badge badge-purple">Бюро Решений</span>
+            <h3 style="margin-top: var(--space-3); margin-bottom: var(--space-2);">Бюро Решений</h3>
+            <p class="text-light">
+              Разборы сложных кейсов и нестандартные применения нейросетей.
+            </p>
+            <a href="https://t.me/codclub_bureau" class="btn" target="_blank" rel="noopener">Открыть в Telegram</a>
+          </article>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Email Form Section -->
+    <section class="section bg-bg">
+      <div class="container-narrow">
+        <div class="card" style="max-width: 500px; margin: 0 auto;">
+          <h2 style="text-align: center; margin-bottom: var(--space-2);">Получи промпты на email</h2>
+          <p class="text-light text-center" style="margin-bottom: var(--space-6);">
+            Подборка лучших шаблонов для старта бесплатно
+          </p>
+          
+          <form id="email-form" action="#" method="POST">
+            <label for="email" class="sr-only">Email</label>
+            <input 
+              type="email" 
+              id="email" 
+              name="email" 
+              class="input" 
+              placeholder="tvoy@email.ru" 
+              required
+            />
+            
+            <div class="checkbox-wrapper" style="margin: var(--space-4) 0;">
+              <input 
+                type="checkbox" 
+                id="consent" 
+                name="consent" 
+                class="checkbox" 
+                required
+              />
+              <label for="consent" class="checkbox-label">
+                Согласен на обработку персональных данных и рассылку. 
+                <a href="/legal/privacy/">Политика конфиденциальности</a>
+              </label>
+            </div>
+            
+            <button type="submit" class="btn btn-green" style="width: 100%;">Получить промпты</button>
+            
+            <div id="form-message" class="form-message" style="display: none;"></div>
+          </form>
+        </div>
+      </div>
+    </section>
+    
+    <!-- FAQ Section -->
+    <section class="section bg-surface">
+      <div class="container-narrow">
+        <h2 style="text-align: center; margin-bottom: var(--space-8);">Частые вопросы</h2>
+        
+        <details class="faq-item">
+          <summary>Это действительно бесплатно?</summary>
+          <div class="faq-item__content">
+            <p>Да, все материалы на сайте — бесплатные. Мы не берём деньги за промпты и шаблоны. В будущем планируем платные продукты, но база останется свободной.</p>
+          </div>
+        </details>
+        
+        <details class="faq-item">
+          <summary>Нужна ли регистрация?</summary>
+          <div class="faq-item__content">
+            <p>Нет, регистрация не требуется. Копируй промпты и используй сразу. Email просим только если хочешь получить подборку материалов письмом.</p>
+          </div>
+        </details>
+        
+        <details class="faq-item">
+          <summary>А если у меня нет VPN или зарубежной карты?</summary>
+          <div class="faq-item__content">
+            <p>Мы рассказываем о нейросетях, которые доступны из России или работают через Telegram. В каждом материале указываем, что нужно для доступа.</p>
+          </div>
+        </details>
+      </div>
+    </section>
+    
+    <!-- About Section -->
+    <section class="section bg-bg">
+      <div class="container-narrow">
+        <h2 style="margin-bottom: var(--space-4);">О проекте</h2>
+        <p class="text-light" style="font-size: var(--text-lg);">
+          CodClub — это проект для тех, кто хочет разобраться в нейросетях без паники и маркетингового шума. Мы верим, что ИИ должен быть инструментом, а не чёрным ящиком. Поэтому объясняем сложное простыми словами и показываем конкретные примеры использования.
+        </p>
+        <p class="text-light" style="font-size: var(--text-lg);">
+          Никаких обещаний «заработать миллион за неделю». Только честные инструкции и проверенные решения.
+        </p>
+      </div>
+    </section>
+  </main>
+  
+  <Footer />
+</BaseLayout>
+
+<script>
+  // Simple form handling (placeholder - connect to backend later)
+  const form = document.getElementById('email-form');
+  const messageEl = document.getElementById('form-message');
+  
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const email = (form.querySelector('#email') as HTMLInputElement).value;
+      const consent = (form.querySelector('#consent') as HTMLInputElement).checked;
+      
+      if (!consent) {
+        messageEl.textContent = 'Пожалуйста, подтвердите согласие.';
+        messageEl.className = 'form-message form-message--error';
+        messageEl.style.display = 'block';
+        return;
+      }
+      
+      // Placeholder: In real implementation, send to backend
+      messageEl.textContent = 'Спасибо! Проверьте почту.';
+      messageEl.className = 'form-message form-message--success';
+      messageEl.style.display = 'block';
+      form.reset();
+    });
+  }
+</script>

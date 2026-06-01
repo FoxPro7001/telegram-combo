@@ -1,0 +1,60 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+---
+
+<BaseLayout title="Публичная оферта">
+  <Header />
+  
+  <main>
+    <section class="section bg-bg">
+      <div class="container-narrow">
+        <h1>Публичная оферта</h1>
+        <p class="text-light" style="margin-bottom: var(--space-8);">
+          Последнее обновление: январь 2026
+        </p>
+        
+        <article style="max-width: 720px;">
+          <h2>1. Общие положения</h2>
+          <p class="text-light">
+            Эта оферта регулирует использование сайта codclub.ru и будущих платных продуктов. Пока платных продуктов нет, этот документ зарезервирован на будущее.
+          </p>
+          
+          <h2>2. Бесплатные материалы</h2>
+          <p class="text-light">
+            Все текущие материалы на сайте предоставляются бесплатно. Ты можешь копировать промпты и использовать их в личных и коммерческих целях без ограничений.
+          </p>
+          
+          <h2>3. Будущие платные продукты</h2>
+          <p class="text-light">
+            Когда мы запустим платные продукты, эта оферта будет обновлена. Покупка продукта означает согласие с условиями.
+          </p>
+          
+          <h2>4. Возвраты</h2>
+          <p class="text-light">
+            Для цифровых продуктов возврат возможен в течение 14 дней, если продукт не был использован.
+          </p>
+          
+          <h2>5. Контакты</h2>
+          <p class="text-light">
+            Вопросы по оферте: email@codclub.ru
+          </p>
+        </article>
+      </div>
+    </section>
+  </main>
+  
+  <Footer />
+</BaseLayout>
+
+<style>
+  article h2 {
+    margin-top: var(--space-8);
+    margin-bottom: var(--space-4);
+  }
+  
+  article p {
+    margin-bottom: var(--space-4);
+  }
+</style>

@@ -1,0 +1,57 @@
+---
+interface Props {
+  title?: string;
+}
+
+const { title = 'CodClub' } = Astro.props;
+---
+
+<header class="header">
+  <div class="container header__inner">
+    <a href="/" class="header__logo" aria-label="CodClub — на главную">
+      <span class="header__logo-symbol">&lt;/&gt;</span>
+      <span>CodClub</span>
+    </a>
+    
+    <button class="header__menu-toggle" aria-label="Меню" aria-expanded="false">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </button>
+    
+    <nav class="header__nav">
+      <a href="/tools/" class="header__nav-link">Материалы</a>
+      <a href="/start/" class="header__nav-link">С чего начать</a>
+      <a href="https://t.me/codclub" class="header__nav-link" target="_blank" rel="noopener">Telegram</a>
+      <a href="/account/" class="header__nav-link">Войти</a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  // Simple mobile menu toggle
+  const menuToggle = document.querySelector('.header__menu-toggle');
+  const nav = document.querySelector('.header__nav');
+  
+  if (menuToggle && nav) {
+    menuToggle.addEventListener('click', () => {
+      const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true';
+      menuToggle.setAttribute('aria-expanded', String(!isExpanded));
+      nav.style.display = isExpanded ? 'none' : 'flex';
+      
+      if (!isExpanded && window.innerWidth < 640) {
+        nav.style.flexDirection = 'column';
+        nav.style.position = 'absolute';
+        nav.style.top = '100%';
+        nav.style.left = '0';
+        nav.style.right = '0';
+        nav.style.background = 'var(--surface)';
+        nav.style.padding = 'var(--space-4)';
+        nav.style.borderBottom = '1px solid var(--border)';
+        nav.style.zIndex = '100';
+      }
+    });
+  }
+</script>
